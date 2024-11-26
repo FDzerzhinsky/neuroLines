@@ -27,12 +27,15 @@ class Preparator:
         x_encoders = {}
         y_encoders = {}
         for column in self.x_data.columns:
-            x_enc[column] = label_encoder.fit_transform(self.x_data[column])
-            x_encoders[column] = label_encoder
+            if column != 'Скорость линии':
+                x_enc[column] = label_encoder.fit_transform(self.x_data[column])
+            else:
+                x_enc[column] = self.x_data[column]
+                x_encoders[column] = label_encoder
         for column in self.y_data.columns:
             y_enc[column] = label_encoder.fit_transform(self.y_data[column])
             y_encoders[column] = label_encoder
         self.x_enc, self.y_enc = x_enc.values, y_enc.values
-
+        # self.x_enc, self.y_enc = x_enc, y_enc
 
 
