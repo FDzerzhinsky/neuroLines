@@ -1,5 +1,5 @@
 import os
-from preparator import Preparator
+from preprocessor import Preparator
 
 project_root = os.path.dirname(__file__)
 data_path = os.path.join(project_root, 'data', 'Синтетический датасет.xlsx')

@@ -1,7 +1,6 @@
 # Этот файл содержит класс Preparator, который предназначен для предобработки данных
 # Класс импортирует данные из файла .xlsx, берёт с указанных листов входные и выходные параметры для обучения нейросети
 
-
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
@@ -10,10 +9,12 @@ class Preparator:
         self.path = path
         self.x_sheet_name = x_sheet_name
         self.y_sheet_name = y_sheet_name
+        self.numerical = ['Скорость линии']
         self.x_data = None
         self.y_data = None
-        self.x_enc = None
-        self.y_enc = None
+        self.x_cat = None
+        self.x_num = None
+        self.y_cat = None
         self._load_data()
         self.encode()
 
@@ -27,15 +28,13 @@ class Preparator:
         x_encoders = {}
         y_encoders = {}
         for column in self.x_data.columns:
-            if column != 'Скорость линии':
+            if column not in self.numerical:
                 x_enc[column] = label_encoder.fit_transform(self.x_data[column])
-            else:
-                x_enc[column] = self.x_data[column]
                 x_encoders[column] = label_encoder
         for column in self.y_data.columns:
             y_enc[column] = label_encoder.fit_transform(self.y_data[column])
             y_encoders[column] = label_encoder
-        self.x_enc, self.y_enc = x_enc.values, y_enc.values
+        self.x_cat, self.y_cat = x_enc.values, y_enc
         # self.x_enc, self.y_enc = x_enc, y_enc
 
 
