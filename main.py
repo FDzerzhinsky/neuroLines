@@ -12,4 +12,3 @@ predictor.build()
 # # Сохраняем данные датафреймов data.x_enc и data.y_enc в файлы .xlsx
 # data.x_enc.to_excel('x_data.xlsx', index=False)
 # data.y_enc.to_excel('y_data.xlsx', index=False)
-data

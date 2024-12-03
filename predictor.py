@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Embedding, Flatten, Dense, Concatenate, Dropout
 class Predictor:
@@ -6,16 +7,21 @@ class Predictor:
         self.data = data
 
     def build(self):
-        categorical_data = self.data.x_cat
-        numerical_data = self.data.x_num
+        # Метод строит модель
+        # Делим данные
+        label = 'Устройство нанесения'
+
+        trn_cat_data, tst_cat_data, trn_num_data, tst_num_data, trn_labels, tst_labels = train_test_split(self.data.x_cat, self.data.x_num,
+                                                                  self.data.y_onehot[label],
+                                                                  test_size=0.2, random_state=42)
 
         # Определите параметры эмбеддинг-слоя
-        input_dim = np.max(categorical_data) + 1  # Размер словаря (максимальное значение + 1)
+        input_dim = np.max(trn_cat_data) + 1  # Размер словаря (максимальное значение + 1)
         output_dim = 4  # Размерность эмбеддингов
 
         # Вход для категориальных данных
-        categorical_input = Input(shape=(categorical_data.shape[1],), name='categorical_input')
-        embedding_layer = Embedding(input_dim=input_dim, output_dim=output_dim, input_length=categorical_data.shape[1])(
+        categorical_input = Input(shape=(trn_cat_data.shape[1],), name='categorical_input')
+        embedding_layer = Embedding(input_dim=input_dim, output_dim=output_dim, input_length=trn_cat_data.shape[1])(
             categorical_input)
         flatten_layer = Flatten()(embedding_layer)
 
@@ -44,5 +50,5 @@ class Predictor:
         model.summary()
 
         # Пример обучения модели
-        labels = self.data.y_onehot['Устройство нанесения']
-        model.fit([categorical_data, numerical_data], labels, epochs=1000)
+
+        model.fit([trn_cat_data, trn_num_data], trn_labels, epochs=200)
