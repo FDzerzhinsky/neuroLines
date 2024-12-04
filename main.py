@@ -1,6 +1,11 @@
 import os
 from preprocessor import Preparator
 from predictor import Predictor
+
+# tensorboard --logdir=logs/fit
+
+
+
 project_root = os.path.dirname(__file__)
 data_path = os.path.join(project_root, 'data', 'Синтетический датасет.xlsx')
 

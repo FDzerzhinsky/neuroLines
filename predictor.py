@@ -2,9 +2,18 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Embedding, Flatten, Dense, Concatenate, Dropout
+
+import os
+from tensorflow.keras.callbacks import TensorBoard
+
+# Создание директории для логов TensorBoard
+log_dir = os.path.join("logs", "fit", "model_1")
+tensorboard_callback = TensorBoard(log_dir=log_dir, histogram_freq=1)
+
 class Predictor:
     def __init__(self, data):
         self.data = data
+        self.history = None
 
     def build(self):
         # Метод строит модель
@@ -51,4 +60,9 @@ class Predictor:
 
         # Пример обучения модели
 
-        model.fit([trn_cat_data, trn_num_data], trn_labels, epochs=200)
+        self.history = model.fit([trn_cat_data, trn_num_data],
+                                 trn_labels,
+                                 epochs=200,
+                                 batch_size = 15,
+                                 validation_split = 0.1,
+                                 callbacks=[tensorboard_callback])
